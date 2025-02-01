@@ -39,7 +39,7 @@ export default function StrokePredictionForm() {
 
         try {
             const promises = models.map(async (model) => {
-                const response = await fetch('http://127.0.0.1:8000/predict-stroke/', {
+                const response = await fetch('https://stroke-pred-api.onrender.com/predict-stroke/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
