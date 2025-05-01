@@ -3,26 +3,34 @@
 import { useState } from 'react';
 
 interface FormData {
-    gender: string;
-    age: string;
-    hypertension: string;
-    heart_disease: string;
-    ever_married: string;
-    work_type: string;
-    bmi: string;
-    smoking_status: string;
+    jenis_kelamin: string;
+    usia: string;
+    riwayat_hipertensi: string;
+    riwayat_penyakit_jantung: string;
+    sudah_menikah: string;
+    berat_badan: string;
+    riwayat_merokok: string;
+    detak_jantung: string;
+    saturasi_oksigen: string;
+    suhu_tubuh: string;
+    tekanan_sistolik: string;
+    tekanan_diastolik: string;
 }
 
 export default function StrokePredictionForm() {
     const [formData, setFormData] = useState<FormData>({
-        gender: '1',
-        age: '50',
-        hypertension: '1',
-        heart_disease: '0',
-        ever_married: '1',
-        work_type: '2',
-        bmi: '100',
-        smoking_status: '0',
+        jenis_kelamin: "1",
+        usia: "70",
+        riwayat_hipertensi: "1",
+        riwayat_penyakit_jantung: "1",
+        sudah_menikah: "1",
+        berat_badan: "70",
+        riwayat_merokok: "1",
+        detak_jantung: "90",
+        saturasi_oksigen: "99",
+        suhu_tubuh: "36.5",
+        tekanan_sistolik: "120",
+        tekanan_diastolik: "90",
     });
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -40,14 +48,14 @@ export default function StrokePredictionForm() {
         try {
             const promises = models.map(async (model) => {
                 const response = await fetch('https://stroke-pred-api.onrender.com/predict-stroke/', {
+                    // const response = await fetch('http://127.0.0.1:8000/predict-stroke/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         ...formData,
-                        age: parseFloat(formData.age),
-                        bmi: parseFloat(formData.bmi),
+                        suhu_tubuh: parseFloat(formData.suhu_tubuh),
                         model_name: model,
                     }),
                 });
@@ -90,24 +98,23 @@ export default function StrokePredictionForm() {
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
                     <div className="flex flex-col">
-                        <label className="mb-2 text-sm font-medium">Gender</label>
+                        <label className="mb-2 text-sm font-medium">Jenis Kelamin</label>
                         <select
-                            name="gender"
-                            value={formData.gender}
+                            name="jenis_kelamin"
+                            value={formData.jenis_kelamin}
                             onChange={handleChange}
                             className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="1">Male</option>
-                            <option value="0">Female</option>
-                            <option value="-1">Other</option>
+                            <option value="1">Laki-laki</option>
+                            <option value="0">Perempuan</option>
                         </select>
                     </div>
                     <div className="flex flex-col">
                         <label className="mb-2 text-sm font-medium">Usia</label>
                         <input
                             type="number"
-                            name="age"
-                            value={formData.age}
+                            name="usia"
+                            value={formData.usia}
                             onChange={handleChange}
                             className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
                             step="0.1"
@@ -116,83 +123,117 @@ export default function StrokePredictionForm() {
                     <div className="flex flex-col">
                         <label className="mb-2 text-sm font-medium">Riwayat Hipertensi</label>
                         <select
-                            name="hypertension"
-                            value={formData.hypertension}
+                            name="riwayat_hipertensi"
+                            value={formData.riwayat_hipertensi}
                             onChange={handleChange}
                             className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="0">No</option>
-                            <option value="1">Yes</option>
+                            <option value="0">Tidak</option>
+                            <option value="1">Ya</option>
                         </select>
                     </div>
 
                     <div className="flex flex-col">
                         <label className="mb-2 text-sm font-medium">Riwayat Penyakit Jantung</label>
                         <select
-                            name="heart_disease"
-                            value={formData.heart_disease}
+                            name="riwayat_penyakit_jantung"
+                            value={formData.riwayat_penyakit_jantung}
                             onChange={handleChange}
                             className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="0">No</option>
-                            <option value="1">Yes</option>
+                            <option value="0">Tidak</option>
+                            <option value="1">Ya</option>
                         </select>
                     </div>
-
                     <div className="flex flex-col">
                         <label className="mb-2 text-sm font-medium">Sudah Menikah</label>
                         <select
-                            name="ever_married"
-                            value={formData.ever_married}
+                            name="sudah_menikah"
+                            value={formData.sudah_menikah}
                             onChange={handleChange}
                             className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
+                            <option value="0">Tidak</option>
+                            <option value="1">Ya</option>
                         </select>
                     </div>
-
                     <div className="flex flex-col">
-                        <label className="mb-2 text-sm font-medium">Tipe Pekerjaan</label>
-                        <select
-                            name="work_type"
-                            value={formData.work_type}
-                            onChange={handleChange}
-                            className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="0">Private</option>
-                            <option value="1">Self-employed</option>
-                            <option value="2">Government Job</option>
-                            <option value="-1">Children</option>
-                            <option value="-2">Never Worked</option>
-                        </select>
-                    </div>
-
-                    <div className="flex flex-col">
-                        <label className="mb-2 text-sm font-medium">BMI</label>
+                        <label className="mb-2 text-sm font-medium">Berat Badan</label>
                         <input
                             type="number"
-                            name="bmi"
-                            value={formData.bmi}
+                            name="berat_badan"
+                            value={formData.berat_badan}
                             onChange={handleChange}
                             className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
                             step="0.1"
                         />
                     </div>
-
                     <div className="flex flex-col">
-                        <label className="mb-2 text-sm font-medium">Status Merokok</label>
+                        <label className="mb-2 text-sm font-medium">Riwayat Merokok</label>
                         <select
-                            name="smoking_status"
-                            value={formData.smoking_status}
+                            name="riwayat_merokok"
+                            value={formData.riwayat_merokok}
                             onChange={handleChange}
                             className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                            <option value="0">Never Smoked</option>
-                            <option value="1">Unknown</option>
-                            <option value="2">Formerly Smoked</option>
-                            <option value="3">Smokes</option>
+                            <option value="0">Tidak</option>
+                            <option value="1">Ya</option>
                         </select>
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-2 text-sm font-medium">Detak Jantung</label>
+                        <input
+                            type="number"
+                            name="detak_jantung"
+                            value={formData.detak_jantung}
+                            onChange={handleChange}
+                            className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            step="0.1"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-2 text-sm font-medium">Saturasi Oksigen</label>
+                        <input
+                            type="number"
+                            name="saturasi_oksigen"
+                            value={formData.saturasi_oksigen}
+                            onChange={handleChange}
+                            className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            step="0.1"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-2 text-sm font-medium">Suhu Tubuh</label>
+                        <input
+                            type="number"
+                            name="suhu_tubuh"
+                            value={formData.suhu_tubuh}
+                            onChange={handleChange}
+                            className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            step="0.1"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-2 text-sm font-medium">Tekanan Sistolik</label>
+                        <input
+                            type="number"
+                            name="tekanan_sistolik"
+                            value={formData.tekanan_sistolik}
+                            onChange={handleChange}
+                            className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            step="0.1"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-2 text-sm font-medium">Tekanan Diastolik</label>
+                        <input
+                            type="number"
+                            name="tekanan_diastolik"
+                            value={formData.tekanan_diastolik}
+                            onChange={handleChange}
+                            className="p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            step="0.1"
+                        />
                     </div>
                 </div>
 

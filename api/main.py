@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://stroke-pred-api.vercel.app"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["POST"],
     allow_headers=["*"],
@@ -24,14 +24,18 @@ scaler = joblib.load("scaler.pkl")
 
 
 class StrokeInput(BaseModel):
-    gender: int
-    age: float
-    hypertension: int
-    heart_disease: int
-    ever_married: int
-    work_type: int
-    bmi: float
-    smoking_status: int
+    jenis_kelamin: int
+    usia: int
+    riwayat_hipertensi: int
+    riwayat_penyakit_jantung: int
+    sudah_menikah: int
+    berat_badan: int
+    riwayat_merokok: float
+    detak_jantung: int
+    saturasi_oksigen: int
+    suhu_tubuh: float
+    tekanan_sistolik: int
+    tekanan_diastolik: int
     model_name: str
 
 
@@ -45,14 +49,18 @@ async def predict_stroke(data: StrokeInput):
     input_data = np.array(
         [
             [
-                data.gender,
-                data.age,
-                data.hypertension,
-                data.heart_disease,
-                data.ever_married,
-                data.work_type,
-                data.bmi,
-                data.smoking_status,
+                data.jenis_kelamin,
+                data.usia,
+                data.riwayat_hipertensi,
+                data.riwayat_penyakit_jantung,
+                data.sudah_menikah,
+                data.berat_badan,
+                data.riwayat_merokok,
+                data.detak_jantung,
+                data.saturasi_oksigen,
+                data.suhu_tubuh,
+                data.tekanan_sistolik,
+                data.tekanan_diastolik,
             ]
         ]
     )

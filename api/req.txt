@@ -1,6 +1,5 @@
 scikit-learn
-xgboost
 numpy
 pandas
-fastapi[all]
+fastapi
 uvicorn

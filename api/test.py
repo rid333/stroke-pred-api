@@ -1,16 +1,21 @@
 import requests
 
-API_URL = "http://127.0.0.1:8000/predict-stroke/"
+# API_URL = "https://stroke-pred-api.onrender.com/predict-stroke"
+API_URL = "http://127.0.0.1:8000/predict-stroke"
 
 test_data = {
-    "gender": 1,
-    "age": 50.0,
-    "hypertension": 1,
-    "heart_disease": 0,
-    "ever_married": 1,
-    "work_type": 2,
-    "bmi": 100.0,
-    "smoking_status": 0,
+    "jenis_kelamin": 1,
+    "usia": 70,
+    "riwayat_hipertensi": 1,
+    "riwayat_penyakit_jantung": 1,
+    "sudah_menikah": 1,
+    "berat_badan": 70,
+    "riwayat_merokok": 1,
+    "detak_jantung": 90,
+    "saturasi_oksigen": 99,
+    "suhu_tubuh": 36.5,
+    "tekanan_sistolik": 200,
+    "tekanan_diastolik": 150,
 }
 
 models = ["logistic_regression", "xgboost", "random_forest"]
@@ -21,10 +26,6 @@ for model in models:
 
     if response.status_code == 200:
         result = response.json()
-        # print(f"Pred using {model}:")
-        # print(f"Pred: {'Stroke' if result['prediction'] == 1 else 'No Stroke'}")
-        # print(f"No Stroke Probability: {result['no_stroke_probability']}")
-        # print(f"Stroke Probability: {result['stroke_probability']}")
         print(f"{result}")
     else:
         print(f"Err {model}: {response.status_code} - {response.text}")
