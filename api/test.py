@@ -11,14 +11,15 @@ test_data = {
     "sudah_menikah": 1,
     "berat_badan": 70,
     "riwayat_merokok": 1,
-    "detak_jantung": 90,
-    "saturasi_oksigen": 99,
+    "detak_jantung": 98,
+    "saturasi_oksigen": 98,
     "suhu_tubuh": 36.5,
-    "tekanan_sistolik": 200,
-    "tekanan_diastolik": 150,
+    "tekanan_sistolik": 180,
+    "tekanan_diastolik": 120,
 }
 
-models = ["logistic_regression", "xgboost", "random_forest"]
+# models = ["logistic_regression", "xgboost", "random_forest"]
+models = ["random_forest"]
 
 for model in models:
     test_data["model_name"] = model

@@ -37,7 +37,8 @@ export default function StrokePredictionForm() {
     const [rawResults, setRawResults] = useState<{ [key: string]: any }>({});
     const [error, setError] = useState<string | null>(null);
 
-    const models = ['logistic_regression', 'xgboost', 'random_forest'];
+    // const models = ['logistic_regression', 'xgboost', 'random_forest'];
+    const models = ['random_forest'];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

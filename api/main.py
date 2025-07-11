@@ -15,9 +15,10 @@ app.add_middleware(
 )
 
 models = {
-    "logistic_regression": joblib.load("logistic_regression_model.pkl"),
-    "xgboost": joblib.load("xgb_clf_model.pkl"),
-    "random_forest": joblib.load("rf_clf_model.pkl"),
+    # "logistic_regression": joblib.load("logistic_regression_model.pkl"),
+    # "xgboost": joblib.load("xgb_clf_model.pkl"),
+    # "random_forest": joblib.load("rf_clf_model.pkl"),
+    "random_forest": joblib.load("jurnal_rf.pkl"),
 }
 
 scaler = joblib.load("scaler.pkl")
@@ -45,6 +46,7 @@ async def predict_stroke(data: StrokeInput):
         return {
             "error": "Invalid model. Choose from 'logistic_regression', 'xgboost', or 'random_forest'."
         }
+    threshold_rf = 30.4
 
     input_data = np.array(
         [
@@ -65,20 +67,21 @@ async def predict_stroke(data: StrokeInput):
         ]
     )
 
-    input_data_normalized = scaler.transform(input_data)
+    # input_data_normalized = scaler.transform(input_data)
 
     model = models[data.model_name]
 
-    probabilities = model.predict_proba(input_data_normalized)
+    probabilities = model.predict_proba(input_data)
 
-    no_stroke_prob = probabilities[0][0] * 100
     stroke_prob = probabilities[0][1] * 100
 
-    prediction = model.predict(input_data_normalized)[0]
+    if stroke_prob >= threshold_rf:
+        risk_message = "Potensi risiko stroke tinggi — melebihi ambang batas"
+    else:
+        risk_message = "Potensi risiko stroke rendah — di bawah ambang batas"
 
     return {
-        "selected_model": data.model_name,
-        "prediction": int(prediction),
-        "no_stroke_probability": f"{no_stroke_prob:.2f}%",
-        "stroke_probability": f"{stroke_prob:.2f}%",
+        "probabilitas_stroke": f"{stroke_prob:.2f}%",
+        "ambang_batas": f"{threshold_rf:.2f}%",
+        "interpretasi_risiko": risk_message,
     }
