@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import numpy as np
 import joblib
-from sklearn.preprocessing import StandardScaler
 
 app = FastAPI()
 app.add_middleware(
@@ -15,13 +14,18 @@ app.add_middleware(
 )
 
 models = {
-    # "logistic_regression": joblib.load("logistic_regression_model.pkl"),
-    # "xgboost": joblib.load("xgb_clf_model.pkl"),
-    # "random_forest": joblib.load("rf_clf_model.pkl"),
-    "random_forest": joblib.load("jurnal_rf.pkl"),
+    "logistic_regression": joblib.load("logistic_regression_model.pkl"),
+    "xgboost": joblib.load("xgb_clf_model.pkl"),
+    "random_forest": joblib.load("rf_clf_model.pkl"),
 }
 
 scaler = joblib.load("scaler.pkl")
+
+thresholds = {
+    "logistic_regression": 66.1,
+    "xgboost": 28.8,
+    "random_forest": 36.2,
+}
 
 
 class StrokeInput(BaseModel):
@@ -42,11 +46,12 @@ class StrokeInput(BaseModel):
 
 @app.post("/predict-stroke/")
 async def predict_stroke(data: StrokeInput):
-    if data.model_name not in models:
+    model_name = data.model_name
+
+    if model_name not in models:
         return {
             "error": "Invalid model. Choose from 'logistic_regression', 'xgboost', or 'random_forest'."
         }
-    threshold_rf = 30.4
 
     input_data = np.array(
         [
@@ -67,21 +72,22 @@ async def predict_stroke(data: StrokeInput):
         ]
     )
 
-    # input_data_normalized = scaler.transform(input_data)
+    if model_name == "logistic_regression":
+        input_data = scaler.transform(input_data)
 
-    model = models[data.model_name]
+    model = models[model_name]
+    probs = model.predict_proba(input_data)
+    stroke_prob = probs[0][1] * 100
+    threshold = thresholds[model_name]
 
-    probabilities = model.predict_proba(input_data)
-
-    stroke_prob = probabilities[0][1] * 100
-
-    if stroke_prob >= threshold_rf:
+    if stroke_prob >= threshold:
         risk_message = "Potensi risiko stroke tinggi — melebihi ambang batas"
     else:
         risk_message = "Potensi risiko stroke rendah — di bawah ambang batas"
 
     return {
+        "model": model_name,
         "probabilitas_stroke": f"{stroke_prob:.2f}%",
-        "ambang_batas": f"{threshold_rf:.2f}%",
+        "ambang_batas": f"{threshold:.2f}%",
         "interpretasi_risiko": risk_message,
     }

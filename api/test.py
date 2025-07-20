@@ -18,8 +18,8 @@ test_data = {
     "tekanan_diastolik": 120,
 }
 
-# models = ["logistic_regression", "xgboost", "random_forest"]
-models = ["random_forest"]
+models = ["logistic_regression", "xgboost", "random_forest"]
+# models = ["random_forest"]
 
 for model in models:
     test_data["model_name"] = model
